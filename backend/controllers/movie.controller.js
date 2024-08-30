@@ -1,9 +1,9 @@
-import { fetchFromRAPID } from "../services/RAPID.service.js"
+import { fetchFromRAPID } from "../services/tmdb.service.js"
 
 export async function getTrandingMovie(req,res) {
     
     try {
-        const data = await fetchFromRapid("https://movies-api14.p.rapidapi.com/movies");
+        const data = await fetchFromRAPID("https://movies-api14.p.rapidapi.com/movies");
         console.log(data.movies);
         const randomMovie = data.movies[Math.floor(Math.random() * data.movies?.length)];
     
@@ -26,7 +26,3 @@ export async function getTrandingMovie(req,res) {
 //         res.status(500).json({success:false,message:"Internal Server Error"})
 //     }
 // }
-
-export async function getMovieDetails(req,res) {
-    
-}
