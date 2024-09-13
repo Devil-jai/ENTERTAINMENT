@@ -1,28 +1,28 @@
-import { fetchFromRAPID } from "../services/tmdb.service.js"
+import { fetchFromRAPID } from "../services/rapid.service.js"
 
-export async function getTrandingMovie(req,res) {
-    
-    try {
-        const data = await fetchFromRAPID("https://movies-api14.p.rapidapi.com/movies");
-        console.log(data.movies);
-        const randomMovie = data.movies[Math.floor(Math.random() * data.movies?.length)];
-    
-        res.json({ success: true, content: randomMovie });
-      } catch (error) {
-        res.status(500).json({ success: false, message: "Internal Server Error" });
-      }
-    
+export async function getMovieDetails(req, res) {
+	const {id} = req.params;
+	try {
+		// const data = await fetchFromRAPID("https://api.themoviedb.org/3/trending/movie/day?language=en-US");
+		const data = await fetchFromRAPID(`https://movies-api14.p.rapidapi.com/movie/${id}`);
+		res.status(200).json({ success: true, content: data });
+	} catch (error) {
+        if(error.message.includes("404")){
+			return res.status(404).send(null)
+		}
+		res.status(500).json({ success: false, message: "Internal Server Error" });
+	}
 }
 
-// export async function getMovieTrailers(req,res) {
-//     const {id} = req.params;
-//     try {
-//         const data = await fetchFromRAPID(`https://imdb-top-100-movies.p.rapidapi.com/${id}`)
-//         res.json({success:true,trailers:data.resultsb})
-//     } catch (error) {
-//         if(error.message.includes("404")){
-//             return res.status(404).send(null);
-//         }
-//         res.status(500).json({success:false,message:"Internal Server Error"})
-//     }
-// }
+export async function getMOvies(req,res) {
+    
+    try {
+        const data = await fetchFromRAPID(`https://movies-api14.p.rapidapi.com/movies`)
+        res.json({success:true,content:data})
+    } catch (error) {
+        if(error.message.includes("404")){
+            return res.status(404).send(null);
+        }
+        res.status(500).json({success:false,message:"Internal Server Error"})
+    }
+}

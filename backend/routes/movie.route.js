@@ -1,10 +1,10 @@
 import express from 'express'
-import {  getTrandingMovie } from '../controllers/movie.controller.js';
+import {  getMovieDetails, getMOvies } from '../controllers/movie.controller.js';
 
 const router = express.Router();
 
-router.get("/trending",getTrandingMovie)
-// router.get("/:id/trailers",getMovieTrailers
+router.get("/:id/trending",getMovieDetails)
+router.get("/trending",getMOvies)
 // router.get("/:id/details",getMovieDetails)
 
 export default router;
