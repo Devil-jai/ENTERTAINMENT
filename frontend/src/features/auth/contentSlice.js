@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchTrendingContent } from "../../hooks/useGetTrendingContent"; // Import the thunk
+import { fetchallContent } from "../../hooks/useGetAllContent";
 
 const initialState = {
-  
-  trendingContent: null,
+  allContent: null,
   isLoading: false,
   error: null,
+  contentType: "movie",
 };
 
 const contentSlice = createSlice({
@@ -18,15 +18,15 @@ const contentSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchTrendingContent.pending, (state) => {
+      .addCase(fetchallContent.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(fetchTrendingContent.fulfilled, (state, action) => {
+      .addCase(fetchallContent.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.trendingContent = action.payload;
+        state.allContent = action.payload;
       })
-      .addCase(fetchTrendingContent.rejected, (state, action) => {
+      .addCase(fetchallContent.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       });

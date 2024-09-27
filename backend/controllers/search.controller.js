@@ -5,12 +5,12 @@ export async function searchMovies(req,res){
     const { query } = req.params;
 
     try {
-        const response = await fetchFromRAPIDSearch("https://movies-api14.p.rapidapi.com/search")
+        const response = await fetchFromRAPIDSearch(`https://movies-api14.p.rapidapi.com/search/`,{query})
     
-
-    // if(response.results.length === 0){
-    //     return res.status(404).send(null)
-    // }
+        if(!response || response.length === 0){
+            return res.status(404).json({succcess:false , message : "No movies found"})
+        }
+        
   
 
     res.status(200).json({succcess : true , content : response});

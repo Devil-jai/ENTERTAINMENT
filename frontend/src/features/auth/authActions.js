@@ -1,8 +1,9 @@
 import { createAsyncThunk, isRejectedWithValue } from '@reduxjs/toolkit';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { api } from '../../utils/constants';
 
-const api = "http://localhost:5000";
+
 
 // Signup async action
 export const signup = createAsyncThunk('auth/signup', async (credentials, { rejectWithValue }) => {

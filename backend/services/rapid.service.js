@@ -26,3 +26,28 @@ export const fetchFromRAPID = async (url) => {
 
 	return response.data;
 };
+
+export const fetchFromRAPIDTop = async (url) => {
+ 
+	const options = {
+		headers: {
+			// accept: "application/json",
+			// Authorization: "Bearer " + ENV_VARS.RAPID_API_KEY,
+     url : url,
+      'x-rapidapi-key': ENV_VARS.RAPID_API_KEY,
+    'x-rapidapi-host': 'moviedatabase8.p.rapidapi.com'
+		},
+		// params: {
+		// 	query: query
+		//   },
+	};
+  
+  
+	const response = await axios.get(url,options);
+//   console.log(response);
+	if (response.status !== 200) {
+		throw new Error("Failed to fetch data from RAPID" + response.statusText);
+	}
+
+	return response.data;
+};

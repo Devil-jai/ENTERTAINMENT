@@ -2,7 +2,7 @@ import axios from "axios";
 import { ENV_VARS } from "../config/envVars.js";
 import { query } from "express";
 
-export const fetchFromRAPIDSearch = async (url) => {
+export const fetchFromRAPIDSearch = async (url,{query}) => {
  
 	const options = {
 		headers: {
