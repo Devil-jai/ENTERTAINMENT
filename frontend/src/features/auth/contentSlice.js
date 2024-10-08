@@ -1,5 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchallContent } from "../../hooks/useGetAllContent";
+import {
+  fetchallContent,
+  
+} from "../../hooks/useGetAllContent";
 
 const initialState = {
   allContent: null,
@@ -29,7 +32,8 @@ const contentSlice = createSlice({
       .addCase(fetchallContent.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
-      });
+      })
+
   },
 });
 

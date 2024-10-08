@@ -1,10 +1,10 @@
 import express from 'express'
-import { fetchDetailsAndAddBookmark} from "../controllers/bookmark.controller.js"
+import { fetchDetailsAndAddBookmark, fetchDetailsAndRemoveBookmark} from "../controllers/bookmark.controller.js"
 
 
 const router = express.Router()
 
 router.post('/add',fetchDetailsAndAddBookmark)
-// router.delete('/bookmark',removeBookmark);
+router.delete('/remove',fetchDetailsAndRemoveBookmark);
 
 export default router;

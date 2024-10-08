@@ -25,9 +25,14 @@ const userSchema = mongoose.Schema({
         required: true,
       },
       title:{
-        type:String,
-        required:true
-      }
+        type: String,
+   
+      },
+      image:{
+        type:String
+      },
+      releaseDate:{type:String},
+      overview:{type:String}
     },
   ],
 });

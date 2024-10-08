@@ -12,6 +12,7 @@ import TrendingNowSlider from "./Components/Home/TrendingNowSlider";
 import MoviesPage from "./Components/Home/MoviesPage";
 import TvPage from "./Components/Home/TvPage";
 import WatchPage from "./Components/WatchPage";
+import BookmarksPage from "./Components/Home/BookmarksPage";
 
 function App() {
   const { user, isCheckingAuth } = useSelector((state) => state.auth);
@@ -51,7 +52,7 @@ function App() {
           path="/watch/:id"
           element={user ? <WatchPage  /> : <Navigate to={"/login"} />}
         />
-         {/* <Route path="/watch" element={<WatchPage />} /> */}
+         <Route path="/bookmark" element={<BookmarksPage />} />
       </Routes>
       <Toaster />
     </>
