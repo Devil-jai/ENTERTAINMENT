@@ -4,7 +4,11 @@
   "description": "",
   "main": "backend/server.js",
   "scripts": {
-    "dev": "nodemon backend/server.js"
+    "install-server": " npm install",
+    "start-server":"nodemon backend/server.js",
+    "install-client" : "cd frontend && npm install",
+    "build-client": "cd frontend && npm run build",
+    "start-client":"cd frontend && npm start"
   },
   "keywords": [],
   "author": "",
