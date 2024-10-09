@@ -23,7 +23,7 @@ function TvPage() {
             <div className="rounded-lg overflow-hidden relative">
               <img
                 src={item.backdrop_path}
-                alt="Movie image"
+                alt=""
                 className="transition-transform duration-300 ease-in-out group-hover:scale-125"
               />
               <div className="absolute bottom-5 left-4 text-xs">

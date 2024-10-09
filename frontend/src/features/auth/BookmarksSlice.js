@@ -9,9 +9,7 @@ const initialState = {
 
 const bookmarksSlice = createSlice({
     name: 'bookmarks',
-    initialState: {
-      bookmarksContent: [],
-    },
+    initialState,
     reducers: {
       setBookmarks(state, action) {
         state.bookmarksContent = action.payload;

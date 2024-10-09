@@ -11,7 +11,7 @@ import { Link, useLocation } from 'react-router-dom';
 function HomePage() {
   const location = useLocation();
   const dispatch = useDispatch();
-  const { allContent, contentType } = useSelector((state) => state.content);
+  const { contentType } = useSelector((state) => state.content);
   const [searchQuery, setSearchQuery] = useState(''); // State for search query
   const [searchResults, setSearchResults] = useState([]); // Initialize as an empty array
 
@@ -48,7 +48,7 @@ function HomePage() {
       <Navbar />
       <div className='w-svw ms-5'>
         {/* Search bar */}
-        <div className="bg-[#10141E] relative flex items-center w-full h-12 rounded-lg focus-within:shadow-lg bg-white overflow-hidden">
+        <div className="bg-[#10141E] relative flex items-center w-full h-12 rounded-lg focus-within:shadow-lg  overflow-hidden">
           <div className="grid place-items-center h-full w-12 text-gray-300 bg-[#10141E]">
             <i className="fa-solid fa-magnifying-glass"></i>
           </div>
@@ -76,7 +76,7 @@ function HomePage() {
                  <div className="rounded-lg overflow-hidden relative">
                    <img
                      src={item.backdrop_path}
-                     alt="Movie image"
+                     alt=""
                      className="transition-transform duration-300 ease-in-out group-hover:scale-125 w-full"
                    />
                    <div className="absolute bottom-5 left-4 text-xs">

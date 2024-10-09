@@ -1,16 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { Link } from "react-router-dom";
-import { api } from "../../utils/constants";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { fetchallContent } from "../../hooks/useGetAllContent";
-import { fetchTrendingContent } from "../../hooks/fetchtrendingContent";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
 function TrendingNowSlider() {
-  const [showArrows, setShowArrows] = useState(false);
   const dispatch = useDispatch();
   const { allContent, contentType } = useSelector((state) => state.content);
 
@@ -73,7 +68,7 @@ function TrendingNowSlider() {
               <div className=" mx-2 ">
                 <img
                   src={item.backdrop_path}
-                  alt="Movie image"
+                  alt=""
                   className="transition-transform duration-300 rounded-lg ease-in-out group-hover:scale-125 "
                 />
                 <div className="absolute bottom-7 left-4 text-xs">

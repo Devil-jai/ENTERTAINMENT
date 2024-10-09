@@ -90,7 +90,7 @@ const handleBookmarkToggle = async (movie) => {
               <div className="rounded-lg overflow-hidden relative">
                 <img
                   src={item.backdrop_path}
-                  alt="Movie image"
+                  alt=""
                   className="transition-transform duration-300 ease-in-out group-hover:scale-125 w-full"
                 />
                 <div className="absolute bottom-5 left-4 text-xs">

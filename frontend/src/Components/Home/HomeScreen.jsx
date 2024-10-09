@@ -2,7 +2,7 @@ import React from 'react'
 import SignUpPage from '../SignUpPage'; 
 import HomePage from './HomePage';
 import { useSelector } from 'react-redux';
-import Navbar from '../Navbar';
+
 
 
 function HomeScreen() {

@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { authCheck } from "./features/auth/authActions";
 import { Loader } from "lucide-react";
-import TrendingNowSlider from "./Components/Home/TrendingNowSlider";
 import MoviesPage from "./Components/Home/MoviesPage";
 import TvPage from "./Components/Home/TvPage";
 import WatchPage from "./Components/WatchPage";

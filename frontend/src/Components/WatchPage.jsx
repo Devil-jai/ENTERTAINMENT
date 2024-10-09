@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { api } from "../utils/constants";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import jai from "../images/jai.jpg";
+
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
