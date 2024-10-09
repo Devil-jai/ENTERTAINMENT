@@ -60,7 +60,7 @@ function HomePage() {
             value={searchQuery}
             onChange={handleInputChange} // Handle input change
           />
-          {/* <button onClick={handleLogout}> logout</button> */}
+          <button onClick={handleLogout}> logout</button>
         </div>
 
         {/* Display content or search results */}
