@@ -19,7 +19,7 @@ app.use(express.json()); // Middleware to parse JSON bodies
 app.use(cookieParser());
 
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: "https://entertainment-1-jcso.onrender.com",
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 }));
