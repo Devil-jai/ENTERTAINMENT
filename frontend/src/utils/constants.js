@@ -1,2 +1,2 @@
-export const api = "https://entertainment-miu4.onrender.com";
+export const api = "https://entertainment-three.vercel.app/";
 
