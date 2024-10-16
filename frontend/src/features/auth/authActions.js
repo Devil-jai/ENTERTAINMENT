@@ -23,6 +23,7 @@ export const login = createAsyncThunk('auth/login', async (credentials, { reject
         const response = await axios.post(`${api}/api/v1/auth/login`, credentials, { withCredentials: true });
         
         // Store the token in localStorage
+        console.log('authToken -: ',response.data.token);
         if (response.data.token) {
             localStorage.setItem('authToken', response.data.token); // Save token to localStorage
         }
