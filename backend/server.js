@@ -22,6 +22,7 @@ app.use(cors({
     origin: "https://entertainment-ms1g.vercel.app",
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'], 
 }));
 
 // Define routes
