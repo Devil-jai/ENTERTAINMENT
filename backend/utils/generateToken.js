@@ -7,7 +7,7 @@ export const generateTokenAndSetCookie = (userId, res) => {
     res.cookie("jwt-entertainment", token, {
         maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
         httpOnly: true,
-        sameSite: "lax",  // Changed from 'strict' to 'lax' for cross-origin requests
+        sameSite: "None",  // Changed from 'strict' to 'lax' for cross-origin requests
         secure: ENV_VARS.NODE_ENV !== "development",  // Use 'secure' cookie in production
     });
 
