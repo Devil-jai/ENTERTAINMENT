@@ -40,6 +40,9 @@ app.use("/api/v1/tv", protectRoute, tvRoutes);
 app.use("/api/v1/search", protectRoute, searchRoutes);
 app.use('/api/v1/bookmarks', protectRoute, bookmarkRoutes);
 
+app.get("/",(req,res)=>{
+    res.send("<h1>hello</h1>")
+})
 // Start server
 app.listen(PORT, () => {
     console.log("Server started at http://localhost:" + PORT);
