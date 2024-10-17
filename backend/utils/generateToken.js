@@ -5,10 +5,11 @@ export const generateTokenAndSetCookie = (userId, res) => {
     const token = jwt.sign({ userId }, ENV_VARS.JWT_SECRET, { expiresIn: "15d" });
 
     res.cookie("jwt-entertainment", token, {
-        maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
         httpOnly: true,
-        sameSite: "lax",  // Changed from 'strict' to 'lax' for cross-origin requests
-        secure: ENV_VARS.NODE_ENV !== "development",  // Use 'secure' cookie in production
+    secure: process.env.NODE_ENV === 'development',
+    sameSite: "None",
+        maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
+   
     });
 
     return token;
