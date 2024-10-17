@@ -30,37 +30,43 @@ function MoviesPage() {
   // Handle the bookmark toggle action
   // Handle the bookmark toggle action
 const handleBookmarkToggle = async (movie) => {
-    const isBookmarked = localBookmarks.some((bookmark) => bookmark._id === movie._id);
+  
+  const isBookmarked = localBookmarks.some((bookmark) => bookmark._id === movie._id);
 
-    if (isBookmarked) {
-        // Remove bookmark
-        setLocalBookmarks((prevBookmarks) => prevBookmarks.filter((bookmark) => bookmark._id !== movie._id));
-        try {
-            await dispatch(fetchBookmarksRemoveContent(movie._id));
-        } catch (error) {
-            console.error("Error removing bookmark:", error);
-            // Optionally revert optimistic update
-            setLocalBookmarks((prevBookmarks) => [...prevBookmarks, movie]);
-        }
-    } else {
-        // Check if the movie is already bookmarked before adding
-        try {
-            // Dispatch action to add bookmark
-            const result = await dispatch(fetchBookmarksAddContent(movie._id));
-            // Check if the action was fulfilled (not already bookmarked)
-            if (fetchBookmarksAddContent.fulfilled.match(result)) {
-                // Bookmark added successfully
-                setLocalBookmarks((prevBookmarks) => [...prevBookmarks, movie]);
-            } else {
-                // Handle case where movie is already bookmarked
-                console.log("This movie is already bookmarked.");
-            }
-        } catch (error) {
-            console.error("Failed to add bookmark:", error);
-            // Rollback optimistic update if error occurs
-            setLocalBookmarks((prevBookmarks) => prevBookmarks.filter((bookmark) => bookmark._id !== movie._id));
-        }
+  if (isBookmarked) {
+    // Remove bookmark
+    setLocalBookmarks((prevBookmarks) => prevBookmarks.filter((bookmark) => bookmark._id !== movie._id));
+    try {
+      const result = await dispatch(fetchBookmarksRemoveContent(movie._id));
+
+      // Revert the optimistic update if the action is rejected
+      if (fetchBookmarksRemoveContent.rejected.match(result)) {
+        console.error("Error removing bookmark:", result.payload || "Failed to remove bookmark");
+        setLocalBookmarks((prevBookmarks) => [...prevBookmarks, movie]);
+      }
+    } catch (error) {
+      console.error("Error removing bookmark:", error);
+      // Revert optimistic update in case of an error
+      setLocalBookmarks((prevBookmarks) => [...prevBookmarks, movie]);
     }
+  } else {
+    // Add bookmark
+    try {
+      const result = await dispatch(fetchBookmarksAddContent(movie._id));
+
+      if (fetchBookmarksAddContent.fulfilled.match(result)) {
+        // Add to local state only if successfully added
+        setLocalBookmarks((prevBookmarks) => [...prevBookmarks, movie]);
+      } else {
+        // Handle case where movie is already bookmarked or other error
+        console.log("This movie is already bookmarked or an error occurred:", result.payload);
+      }
+    } catch (error) {
+      console.error("Failed to add bookmark:", error);
+      // Rollback optimistic update if error occurs
+      setLocalBookmarks((prevBookmarks) => prevBookmarks.filter((bookmark) => bookmark._id !== movie._id));
+    }
+  }
 };
 
 

@@ -5,6 +5,9 @@ import { User } from "../models/user.model.js";
 export async function fetchDetailsAndAddBookmark(req, res) {
     const userId = req.user._id;
     const { type, id } = req.body;
+    if (!type || !id) {
+        return res.status(400).json({ success: false, message: "Type and ID are required" });
+    }
 
     try {
         const data = await fetchFromRAPID(`https://movies-api14.p.rapidapi.com/${type}/${id}`);

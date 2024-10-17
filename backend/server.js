@@ -20,18 +20,14 @@ app.use(cookieParser());
 
 app.use(cors({
     origin: "https://entertainment-1-jcso.onrender.com",
-    methods: ['GET', 'POST', 'PUT', 'DELETE' , 'OPTIONS'],
+    
+
+    methods: ['GET', 'POST', 'PUT', 'DELETE' ],
     credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization'], 
+   
 }));
 
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'https://entertainment-1-jcso.onrender.com');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE , OPTIONS' );
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    next();
-});
+
 
 // Define routes
 app.use("/api/v1/auth", authRoutes);
@@ -44,6 +40,10 @@ app.get("/",(req,res)=>{
     res.send("<h1>hello</h1>")
 })
 // Start server
+app.get("/",(req,res)=>{
+    res.send("<h1>hello</h1>")
+})
+
 app.listen(PORT, () => {
     console.log("Server started at http://localhost:" + PORT);
     connectDB();

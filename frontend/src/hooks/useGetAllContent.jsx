@@ -9,6 +9,7 @@ export const fetchallContent = createAsyncThunk(
   'content/fetchallContent',
   async (contentType, { rejectWithValue }) => {
     const token = localStorage.getItem('authToken');
+    
     try {
       const response = await axios.get(`${api}/api/v1/${contentType}/all`, {
         headers: {
@@ -16,6 +17,7 @@ export const fetchallContent = createAsyncThunk(
         },
         withCredentials: true,
       });
+      console.log("token",token);
       return response.data.content;
     } catch (error) {
       console.error("Error fetching content:", error); // Log the error for debugging

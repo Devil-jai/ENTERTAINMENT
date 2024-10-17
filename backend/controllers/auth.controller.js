@@ -49,16 +49,17 @@ export async function signup(req, res) {
       image
     });
 
-    generateTokenAndSetCookie(newUser._id,res);
+    const token = generateTokenAndSetCookie(newUser._id, res);
     await newUser.save();
 
+    // Send token back as part of the response as well
     res.status(201).json({
-        success:true,
-        user:{
-            ...newUser._doc,
-            password:"",
-            
-        },
+      success: true,
+      user: {
+        ...newUser._doc,
+        password: "",
+      },
+      token,  // Include the token in the response
     });
 
   } catch (error) {
@@ -86,16 +87,17 @@ export async function login(req, res) {
       return res.status(400).json({success:false,message:"Invalid credentials"})
     }
 
-    generateTokenAndSetCookie(user._id,res);
+    const token = generateTokenAndSetCookie(user._id, res);
 
     res.status(200).json({
-      success:true,
-      user:{
+      success: true,
+      user: {
         ...user._doc,
-        password:""
-      }
-    })
-
+        password: "",
+      },
+      token,  // Include the token in the response
+    });
+    
    } catch(error){
       console.log("Error in login controller",error.message);   
       res.status(500).json({success:false,message:"Internal server error"})
