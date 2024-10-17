@@ -19,7 +19,7 @@ app.use(express.json()); // Middleware to parse JSON bodies
 app.use(cookieParser());
 
 app.use(cors({
-    origin: "https://entertainment-1-jcso.onrender.com",
+    origin: "https://inspiring-cendol-af7025.netlify.app",
     methods: ['GET', 'POST', 'PUT', 'DELETE' , 'OPTIONS'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'], 
