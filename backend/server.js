@@ -19,14 +19,14 @@ app.use(express.json()); // Middleware to parse JSON bodies
 app.use(cookieParser());
 
 app.use(cors({
-    origin: "https://inspiring-cendol-af7025.netlify.app",
+    origin: "https://entertainment-1-jcso.onrender.com",
     methods: ['GET', 'POST', 'PUT', 'DELETE' , 'OPTIONS'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'], 
 }));
 
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'https://inspiring-cendol-af7025.netlify.app');
+    res.header('Access-Control-Allow-Origin', 'https://entertainment-1-jcso.onrender.com');
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE , OPTIONS' );
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
