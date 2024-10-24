@@ -28,7 +28,7 @@ function Navbar() {
           <Link to="/tv" onClick={() => handleSetContentType("tv")}>
             <i className="fa-solid fa-tv fa-sm" style={{ color: "#fff" }}></i>
           </Link>
-          <Link>
+          <Link to="bookmark" >
             <i className="fa-solid fa-bookmark fa-sm" style={{ color: "#fff" }}></i>
           </Link>
         </div>

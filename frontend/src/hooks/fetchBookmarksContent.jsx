@@ -4,13 +4,13 @@ import { api } from "../utils/constants";
 
 // Add Bookmark
 export const fetchBookmarksAddContent = createAsyncThunk(
-  'Bookmarks/fetchBookmarksAddContent',
+  "Bookmarks/fetchBookmarksAddContent",
   async (movieId, { rejectWithValue }) => {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem("authToken");
 
     // If no token, return error message
     if (!token) {
-      return rejectWithValue('You need to be logged in to add bookmarks');
+      return rejectWithValue("You need to be logged in to add bookmarks");
     }
 
     try {
@@ -20,7 +20,7 @@ export const fetchBookmarksAddContent = createAsyncThunk(
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
           withCredentials: true,
         }
@@ -34,33 +34,34 @@ export const fetchBookmarksAddContent = createAsyncThunk(
 
 // Remove Bookmark
 export const fetchBookmarksRemoveContent = createAsyncThunk(
-  'Bookmarks/fetchBookmarksRemoveContent',
+  "Bookmarks/fetchBookmarksRemoveContent",
   async (movieId, { rejectWithValue }) => {
-
-    const token = localStorage.getItem('authToken');
-
+    const token = localStorage.getItem("authToken");
     // If no token, return error message
     if (!token) {
-      return rejectWithValue('You need to be logged in to remove bookmarks');
+      return rejectWithValue("You need to be logged in to remove bookmarks");
     }
 
     try {
       const response = await axios.delete(
         `${api}/api/v1/bookmarks/remove`,
-        
+
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          data: { type: "movie", id: movieId },
+          data: { type: "movie", id: String(movieId) },
           withCredentials: true,
         }
+        
       );
-
+    
       return response?.data;
     } catch (error) {
-      return rejectWithValue(error?.response?.data || "Failed to remove bookmark");
+      return rejectWithValue(
+        error?.response?.data || "Failed to remove bookmark"
+      );
     }
   }
 );

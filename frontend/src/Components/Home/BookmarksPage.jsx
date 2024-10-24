@@ -13,28 +13,21 @@ function BookmarksPage() {
   // Local state for optimistic UI updates
   const [localBookmarks, setLocalBookmarks] = useState(bookmarksArray);
 
-    
-     // Handle the bookmark toggle action
-     useEffect(()=>{
-      setLocalBookmarks(bookmarksArray)
-    },[bookmarksArray])
-
     const handleBookmarkToggle = async (movie) => {
-      console.log(movie);
+    
       const isBookmarked = localBookmarks.some((bookmark) => bookmark.id === movie.id);
      
       if (isBookmarked) {
         // Remove bookmark
         try {
          
-          console.log("About to dispatch fetchBookmarksRemoveContent with movie ID:", movie.id);
+         
           const result = await dispatch(fetchBookmarksRemoveContent(movie.id));
-          console.log("Response from API:", result);
-          // Only update local state if removal succeeded
+          
           if (fetchBookmarksRemoveContent.fulfilled.match(result)) {
             
             setLocalBookmarks((prevBookmarks) =>prevBookmarks.filter((bookmark) => bookmark.id !== movie.id))
-            // window.location.reload()
+            
           } else {
             console.error("Error removing bookmark:", result.payload || "Failed to remove bookmark");
           }

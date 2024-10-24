@@ -42,7 +42,7 @@ const bookmarksSlice = createSlice({
     })
     .addCase(fetchBookmarksRemoveContent.fulfilled, (state, action) => {
       const removedBookmark = action.payload;
-      console.log(removedBookmark);
+      console.log("removedbookmark",removedBookmark);
     
       // Use movieId if _id is not returned
       const bookmarkId = action.meta.arg; // movieId
