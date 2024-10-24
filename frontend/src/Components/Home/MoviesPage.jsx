@@ -3,24 +3,28 @@ import { fetchallContent } from '../../hooks/useGetAllContent';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchBookmarksAddContent, fetchBookmarksRemoveContent } from '../../hooks/fetchBookmarksContent';
+import { legacy_createStore } from '@reduxjs/toolkit';
 
 function MoviesPage() {
   const dispatch = useDispatch();
+  const {user} = useSelector((state)=>state.auth)
+  console.log("lskdfj",user);
   const { allContent, contentType } = useSelector((state) => state.content);
   const { bookmarksContent } = useSelector((state) => state.bookmarks);
-
   // Ensure that bookmarksContent is always an array
-  const bookmarksArray = Array.isArray(bookmarksContent) ? bookmarksContent : [];
+  const bookmarksArray = Array.isArray(user.bookmarks) ? user.bookmarks : [];
 
   // Local state for optimistic UI updates
   const [localBookmarks, setLocalBookmarks] = useState(bookmarksArray);
+  console.log("localBookmarks",localBookmarks);
+
 
   // Update localBookmarks when bookmarksContent changes in the Redux store
   useEffect(() => {
     setLocalBookmarks(bookmarksArray);
-  }, [bookmarksContent]);
+  }, [bookmarksArray]);
 
-  // Fetch all content only when the contentType changes (prevents re-fetch on every render)
+  // Fetch all content only when the contentType changes
   useEffect(() => {
     if (contentType === 'movie') {
       dispatch(fetchallContent(contentType));
@@ -28,47 +32,61 @@ function MoviesPage() {
   }, [contentType, dispatch]);
 
   // Handle the bookmark toggle action
-  // Handle the bookmark toggle action
-const handleBookmarkToggle = async (movie) => {
+  const handleBookmarkToggle = async (movie) => {
+    const isBookmarked = localBookmarks.some((bookmark) => String(bookmark.id) === String(movie._id));
   
-  const isBookmarked = localBookmarks.some((bookmark) => bookmark._id === movie._id);
-
-  if (isBookmarked) {
-    // Remove bookmark
-    setLocalBookmarks((prevBookmarks) => prevBookmarks.filter((bookmark) => bookmark._id !== movie._id));
-    try {
-      const result = await dispatch(fetchBookmarksRemoveContent(movie._id));
-
-      // Revert the optimistic update if the action is rejected
-      if (fetchBookmarksRemoveContent.rejected.match(result)) {
-        console.error("Error removing bookmark:", result.payload || "Failed to remove bookmark");
-        setLocalBookmarks((prevBookmarks) => [...prevBookmarks, movie]);
-      }
-    } catch (error) {
-      console.error("Error removing bookmark:", error);
-      // Revert optimistic update in case of an error
-      setLocalBookmarks((prevBookmarks) => [...prevBookmarks, movie]);
+    console.log("Is Bookmarked:", isBookmarked);
+  
+    // Optimistically update the local bookmarks state
+    if (isBookmarked) {
+      // Removing the bookmark
+      setLocalBookmarks((prevBookmarks) => {
+        const updatedBookmarks = prevBookmarks.filter((bookmark) => {
+          const shouldRemove = String(bookmark.id) !== String(movie._id);
+          console.log("Comparing for removal:", bookmark.id, "against", movie._id, "Result:", shouldRemove);
+          return shouldRemove;
+        });
+        console.log("Updated bookmarks after removal:", updatedBookmarks);
+        return updatedBookmarks;
+      });
+    } else {
+      // Adding the bookmark
+      setLocalBookmarks((prevBookmarks) => {
+        const newBookmarks = [...prevBookmarks, { id: movie._id, ...movie }]; // Include necessary movie properties
+        console.log("Added bookmark:", movie);
+        return newBookmarks;
+      });
     }
-  } else {
-    // Add bookmark
+  
     try {
-      const result = await dispatch(fetchBookmarksAddContent(movie._id));
-
-      if (fetchBookmarksAddContent.fulfilled.match(result)) {
-        // Add to local state only if successfully added
-        setLocalBookmarks((prevBookmarks) => [...prevBookmarks, movie]);
+      // Perform the API call for adding/removing bookmarks
+      const result = isBookmarked
+        ? await dispatch(fetchBookmarksRemoveContent(movie._id))
+        : await dispatch(fetchBookmarksAddContent(movie._id));
+  
+      // Check if the API call was successful
+      if (isBookmarked) {
+        if (!fetchBookmarksRemoveContent.fulfilled.match(result)) {
+          console.error("Error removing bookmark:", result.payload || "Failed to remove bookmark");
+          // Revert optimistic update if the removal failed
+          setLocalBookmarks((prevBookmarks) => [...prevBookmarks, { id: movie._id, ...movie }]);
+        }
       } else {
-        // Handle case where movie is already bookmarked or other error
-        console.log("This movie is already bookmarked or an error occurred:", result.payload);
+        if (!fetchBookmarksAddContent.fulfilled.match(result)) {
+          console.error("Error adding bookmark:", result.payload || "Failed to add bookmark");
+          // Revert optimistic update if the addition failed
+          setLocalBookmarks((prevBookmarks) => prevBookmarks.filter((bookmark) => bookmark.id !== movie._id));
+        }
       }
     } catch (error) {
-      console.error("Failed to add bookmark:", error);
-      // Rollback optimistic update if error occurs
-      setLocalBookmarks((prevBookmarks) => prevBookmarks.filter((bookmark) => bookmark._id !== movie._id));
+      console.error("Error handling bookmark toggle:", error);
+      // Revert optimistic update in case of error
+      setLocalBookmarks((prevBookmarks) => isBookmarked
+        ? [...prevBookmarks, { id: movie._id, ...movie }] // If removing failed, add back the movie
+        : prevBookmarks.filter((bookmark) => bookmark.id !== movie._id));
     }
-  }
-};
-
+  };
+  
 
   return (
     <div className="text-white">
@@ -83,7 +101,7 @@ const handleBookmarkToggle = async (movie) => {
             >
               <i
                 className={
-                  localBookmarks.some((bookmark) => bookmark._id === item._id) // Use _id consistently
+                  localBookmarks.some((bookmark) => String(bookmark.id) === String(item._id)) 
                     ? "fa-solid fa-bookmark" 
                     : "fa-regular fa-bookmark"
                 }

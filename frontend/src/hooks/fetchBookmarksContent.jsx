@@ -36,6 +36,7 @@ export const fetchBookmarksAddContent = createAsyncThunk(
 export const fetchBookmarksRemoveContent = createAsyncThunk(
   'Bookmarks/fetchBookmarksRemoveContent',
   async (movieId, { rejectWithValue }) => {
+
     const token = localStorage.getItem('authToken');
 
     // If no token, return error message
@@ -46,6 +47,7 @@ export const fetchBookmarksRemoveContent = createAsyncThunk(
     try {
       const response = await axios.delete(
         `${api}/api/v1/bookmarks/remove`,
+        
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -55,6 +57,7 @@ export const fetchBookmarksRemoveContent = createAsyncThunk(
           withCredentials: true,
         }
       );
+
       return response?.data;
     } catch (error) {
       return rejectWithValue(error?.response?.data || "Failed to remove bookmark");

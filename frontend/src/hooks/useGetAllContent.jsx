@@ -17,7 +17,7 @@ export const fetchallContent = createAsyncThunk(
         },
         withCredentials: true,
       });
-      console.log("token",token);
+     
       return response.data.content;
     } catch (error) {
       console.error("Error fetching content:", error); // Log the error for debugging

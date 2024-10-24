@@ -21,28 +21,40 @@ const bookmarksSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchBookmarksAddContent.fulfilled, (state, action) => {
-        const newBookmark = action.payload.content; // Ensure the structure here matches your data
+    .addCase(fetchBookmarksAddContent.fulfilled, (state, action) => {
+      const newBookmark = action.payload.content;
+      // Generate a temporary ID using the movieId passed into the thunk
+      if (!newBookmark._id) {
+        newBookmark._id = action.meta.arg; // movieId
+        console.warn("Temporary ID assigned to the bookmark:", newBookmark._id);
+      }
+    
+      const isAlreadyBookmarked = state.bookmarksContent.some(
+        (bookmark) => bookmark._id === newBookmark._id
+      );
+    
+      if (!isAlreadyBookmarked) {
+        state.bookmarksContent.push(newBookmark); // Add bookmark
+        console.log("Bookmark added:", newBookmark);
+      } else {
+        console.log("Bookmark already exists:", newBookmark);
+      }
+    })
+    .addCase(fetchBookmarksRemoveContent.fulfilled, (state, action) => {
+      const removedBookmark = action.payload;
+      console.log(removedBookmark);
+    
+      // Use movieId if _id is not returned
+      const bookmarkId = action.meta.arg; // movieId
 
-        // Check if the bookmark already exists using _id
-        const isAlreadyBookmarked = state.bookmarksContent.some(
-          (bookmark) => bookmark._id === newBookmark._id
-        );
-
-        if (!isAlreadyBookmarked) {
-          state.bookmarksContent.push(newBookmark); // Add bookmark
-          console.log("Bookmark added:", newBookmark);
-        } else {
-          console.log("Bookmark already exists:", newBookmark);
-        }
-      })
-      .addCase(fetchBookmarksRemoveContent.fulfilled, (state, action) => {
-        // Remove bookmark using _id
-        state.bookmarksContent = state.bookmarksContent.filter(
-          (bookmark) => bookmark._id !== action.payload.content._id
-        );
-        console.log("Bookmark removed:", action.payload.content);
-      });
+    
+      state.bookmarksContent = state.bookmarksContent.filter(
+        (bookmark) => bookmark._id !== bookmarkId
+      );
+    
+      console.log("Bookmark removed:", removedBookmark);
+    });
+    
   },
 });
 
