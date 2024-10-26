@@ -13,7 +13,12 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    // You can also define other reducers if necessary
+    updateUserBookmarks(state,action){
+      if(state.user){
+        state.user.bookmarks = action.payload;
+      }
+     
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -71,4 +76,5 @@ const authSlice = createSlice({
   },
 });
 
+export const {updateUserBookmarks} = authSlice.actions;
 export default authSlice.reducer;

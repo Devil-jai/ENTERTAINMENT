@@ -28,10 +28,10 @@ const userSchema = mongoose.Schema({
         type: String,
    
       },
-      image:{
+      backdrop_path:{
         type:String
       },
-      releaseDate:{type:String},
+      release_date:{type:String},
       overview:{type:String}
     },
   ],

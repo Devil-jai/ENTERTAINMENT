@@ -25,6 +25,7 @@ export const fetchBookmarksAddContent = createAsyncThunk(
           withCredentials: true,
         }
       );
+      console.log("Response",response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Failed to add bookmark");

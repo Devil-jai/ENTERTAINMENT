@@ -23,6 +23,7 @@ const bookmarksSlice = createSlice({
     builder
     .addCase(fetchBookmarksAddContent.fulfilled, (state, action) => {
       const newBookmark = action.payload.content;
+      console.log("newBookmark",newBookmark);
       // Generate a temporary ID using the movieId passed into the thunk
       if (!newBookmark._id) {
         newBookmark._id = action.meta.arg; // movieId
@@ -32,7 +33,7 @@ const bookmarksSlice = createSlice({
       const isAlreadyBookmarked = state.bookmarksContent.some(
         (bookmark) => bookmark._id === newBookmark._id
       );
-    
+    console.log("flskdjf");
       if (!isAlreadyBookmarked) {
         state.bookmarksContent.push(newBookmark); // Add bookmark
         console.log("Bookmark added:", newBookmark);
@@ -41,16 +42,18 @@ const bookmarksSlice = createSlice({
       }
     })
     .addCase(fetchBookmarksRemoveContent.fulfilled, (state, action) => {
+      
       const removedBookmark = action.payload;
-      console.log("removedbookmark",removedBookmark);
+    
     
       // Use movieId if _id is not returned
       const bookmarkId = action.meta.arg; // movieId
 
-    
+    console.log("bookmarkId",bookmarkId);
       state.bookmarksContent = state.bookmarksContent.filter(
         (bookmark) => bookmark._id !== bookmarkId
       );
+      console.log("sdd",state.bookmarksContent);
     
       console.log("Bookmark removed:", removedBookmark);
     });

@@ -3,13 +3,14 @@ import { fetchallContent } from '../../hooks/useGetAllContent';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchBookmarksAddContent, fetchBookmarksRemoveContent } from '../../hooks/fetchBookmarksContent';
+import { updateUserBookmarks } from '../../features/auth/authSlice.js';  
 
 function MoviesPage() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { allContent, contentType } = useSelector((state) => state.content);
   const { bookmarksContent } = useSelector((state) => state.bookmarks);
-
+console.log("bookmarkscontent",bookmarksContent);
   // Ensure bookmarksContent is always an array
   
   const bookmarksArray = Array.isArray(user?.bookmarks) ? user?.bookmarks : [];
@@ -33,45 +34,42 @@ console.log("bookmarksArray",bookmarksArray);
 
   // Handle the bookmark toggle action
   const handleBookmarkToggle = async (movie) => {
+    console.log("movie",movie);
     const isBookmarked = localBookmarks.some((bookmark) => String(bookmark.id) === String(movie._id));
+    
+    // Optimistically update local bookmarks
+    const updatedBookmarks = isBookmarked
+      ? localBookmarks.filter((bookmark) => String(bookmark.id) !== String(movie._id))
+      : [...localBookmarks, { id: movie._id, ...movie }];
+ 
 
-    // Optimistically update the local bookmarks state
-    if (isBookmarked) {
-      // Removing the bookmark
-      setLocalBookmarks((prevBookmarks) => prevBookmarks.filter((bookmark) => String(bookmark.id) !== String(movie._id))
-      );
-    } else {
-      // Adding the bookmark
-      setLocalBookmarks((prevBookmarks) => [...prevBookmarks, { id: movie._id, ...movie }]);
-    }
 
     try {
-      // Perform the API call for adding/removing bookmarks
       const result = isBookmarked
         ? await dispatch(fetchBookmarksRemoveContent(movie._id))
         : await dispatch(fetchBookmarksAddContent(movie._id));
 
-      // Check if the API call was successful
-      if (isBookmarked && !fetchBookmarksRemoveContent.fulfilled.match(result)) {
-        console.error("Error removing bookmark:", result.payload || "Failed to remove bookmark");
-        setLocalBookmarks((prevBookmarks) => [...prevBookmarks, { id: movie._id, ...movie }]);
-      } else if (!isBookmarked && !fetchBookmarksAddContent.fulfilled.match(result)) {
-        console.error("Error adding bookmark:", result.payload || "Failed to add bookmark");
-        setLocalBookmarks((prevBookmarks) =>
-          prevBookmarks.filter((bookmark) => bookmark.id !== movie._id)
-        );
+      if (
+        (isBookmarked && fetchBookmarksRemoveContent.fulfilled.match(result)) ||
+        (!isBookmarked && fetchBookmarksAddContent.fulfilled.match(result))
+      ) {
+        // Dispatch action to update user's bookmarks in Redux
+        dispatch(updateUserBookmarks(updatedBookmarks));
+        
+      } else {
+        console.error("Error with bookmark toggle:", result.payload || "Failed to toggle bookmark");
+        // Revert local update if API call fails
+        setLocalBookmarks(isBookmarked
+          ? [...localBookmarks, { id: movie._id, ...movie }]
+          : localBookmarks.filter((bookmark) => bookmark.id !== movie._id));
       }
-     
     } catch (error) {
       console.error("Error handling bookmark toggle:", error);
-      setLocalBookmarks((prevBookmarks) =>
-        isBookmarked
-          ? [...prevBookmarks, { id: movie._id, ...movie }] // Revert if removal failed
-          : prevBookmarks.filter((bookmark) => bookmark.id !== movie._id) // Revert if addition failed
-      );
+      setLocalBookmarks(isBookmarked
+        ? [...localBookmarks, { id: movie._id, ...movie }]
+        : localBookmarks.filter((bookmark) => bookmark.id !== movie._id));
     }
   };
-
   return (
     <div className="text-white">
       <h2 className="mb-4 text-2xl font-bold">Recommended for you</h2>

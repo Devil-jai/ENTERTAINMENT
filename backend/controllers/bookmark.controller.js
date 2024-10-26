@@ -5,19 +5,19 @@ import { User } from "../models/user.model.js";
 export async function fetchDetailsAndAddBookmark(req, res) {
     const userId = req.user._id;
     const { type, id } = req.body;
-    console.log("Received request to remove bookmark:", { type, id });
+    console.log("Received request to add bookmark:", { type, id });
     if (!type || !id) {
         return res.status(400).json({ success: false, message: "Type and ID are required" });
     }
 
     try {
         const data = await fetchFromRAPID(`https://movies-api14.p.rapidapi.com/${type}/${id}`);
-        
+      
         if (!data) {
             return res.status(404).json({ success: false, message: "Content not found" });
         }
         
-        const { title, backdrop_path: image, release_date: releaseDate, overview } = data.movie;
+        const { title, backdrop_path, release_date, overview } = data.movie;
 
         const user = await User.findById(userId);
         
@@ -27,10 +27,10 @@ export async function fetchDetailsAndAddBookmark(req, res) {
         }
 
         
-        user.bookmarks.push({ type, id, title, image, releaseDate, overview });
+        user.bookmarks.push({ type, id, title, backdrop_path, release_date, overview });
         await user.save();
 
-        res.status(200).json({ success: true, message: "Bookmark added successfully", content: { title, image, releaseDate, overview } });
+        res.status(200).json({ success: true, message: "Bookmark added successfully", content: { title, backdrop_path, release_date, overview } });
     } catch (error) {
         
         res.status(500).json({ success: false, message: "Internal Server Error" });
@@ -42,7 +42,7 @@ export async function fetchDetailsAndRemoveBookmark(req, res) {
     const userId = req.user._id;
     const { type, id } = req.body;
 
-    console.log("Received request to remove bookmark:", { type, id });
+
 
     try {
         const user = await User.findById(userId);

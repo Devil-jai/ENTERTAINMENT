@@ -51,7 +51,7 @@ function App() {
           path="/watch/:id"
           element={user ? <WatchPage  /> : <Navigate to={"/login"} />}
         />
-         <Route path="/bookmark" element={<BookmarksPage />} />
+         <Route path="/bookmark" element={ <BookmarksPage />} />
       </Routes>
       <Toaster />
     </>
