@@ -3,22 +3,32 @@ import { fetchallContent } from '../../hooks/useGetAllContent';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { api } from '../../utils/constants';
+import { setContentType } from '../../features/auth/contentSlice';
 
 function TvPage() {
   const dispatch = useDispatch();
   const { allContent, contentType } = useSelector((state) => state.content);
+
+
 
   useEffect(() => {
     if (contentType === 'tv') {
       dispatch(fetchallContent(contentType));
     }
   }, [contentType, dispatch]);
+console.log(contentType);
+  useEffect(() => {
+    dispatch(setContentType("tv"));
+  }, [dispatch]);
 
   return (
     <div className="text-white">
     <h2 className="mb-4 text-2xl font-bold">TV Series</h2>
     <div className="grid grid-cols-4 gap-4">
-      {allContent?.movies?.map((item) => (
+      {
+        contentType === "tv" ? (
+
+      allContent?.movies?.map((item) => (
         <Link to={`${api}/watch/${item.id}`} className="min-w-[300px] group ms-4" key={item.id}>
           <div className="rounded-lg overflow-hidden relative">
             <img
@@ -34,7 +44,9 @@ function TvPage() {
             </div>
           </div>
         </Link>
-      ))}
+      ))
+    ) : ("loading")
+      }
     </div>
   </div>
 );
