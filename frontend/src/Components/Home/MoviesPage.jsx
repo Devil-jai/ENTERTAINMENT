@@ -1,119 +1,132 @@
-import React, { useEffect, useState } from 'react';
-import { fetchallContent } from '../../hooks/useGetAllContent';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { fetchBookmarksAddContent, fetchBookmarksRemoveContent } from '../../hooks/fetchBookmarksContent';
-import { updateUserBookmarks } from '../../features/auth/authSlice.js';  
+import React, { useEffect, useState, useCallback } from "react";
+import { fetchallContent } from "../../hooks/useGetAllContent";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import {
+  fetchBookmarksAddContent,
+  fetchBookmarksRemoveContent,
+} from "../../hooks/fetchBookmarksContent";
+import { updateUserBookmarks } from "../../features/auth/authSlice.js";
+import { Loader } from "lucide-react";
 
 function MoviesPage() {
+  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { allContent, contentType } = useSelector((state) => state.content);
-  const { bookmarksContent } = useSelector((state) => state.bookmarks);
-console.log("bookmarkscontent",bookmarksContent);
-  // Ensure bookmarksContent is always an array
-  
-  const bookmarksArray = Array.isArray(user?.bookmarks) ? user?.bookmarks : [];
 
-  // Local state for optimistic UI updates
-  const [localBookmarks, setLocalBookmarks] = useState(bookmarksArray);
+  // Initialize local bookmarks from user data
+  const [localBookmarks, setLocalBookmarks] = useState(
+    Array.isArray(user?.bookmarks) ? user?.bookmarks : []
+  );
 
-  // Update localBookmarks when bookmarksContent changes in the Redux store
+  // Sync local bookmarks with Redux when user bookmarks change
   useEffect(() => {
-    setLocalBookmarks(bookmarksArray); // Sync with Redux
-  }, [bookmarksArray]);
+    setLocalBookmarks(Array.isArray(user?.bookmarks) ? user?.bookmarks : []);
+  }, [user?.bookmarks]);
 
-  console.log("localbookmark",localBookmarks);
-console.log("bookmarksArray",bookmarksArray);
-  // Fetch all content only when the contentType changes
+  // Fetch all content when the contentType is "movie"
   useEffect(() => {
-    if (contentType === 'movie') {
-      dispatch(fetchallContent(contentType));
+    if (contentType === "movie") {
+      setLoading(true); // Set loading before fetching
+      dispatch(fetchallContent(contentType)).finally(() => setLoading(false));
     }
   }, [contentType, dispatch]);
 
-  // Handle the bookmark toggle action
-  const handleBookmarkToggle = async (movie) => {
-    console.log("movie",movie);
-    const isBookmarked = localBookmarks.some((bookmark) => String(bookmark.id) === String(movie._id));
-    
-    // Optimistically update local bookmarks
-    const updatedBookmarks = isBookmarked
-      ? localBookmarks.filter((bookmark) => String(bookmark.id) !== String(movie._id))
-      : [...localBookmarks, { id: movie._id, ...movie }];
- 
+  // Toggle bookmark function
+  const handleBookmarkToggle = useCallback(
+    async (movie) => {
+      const isBookmarked = localBookmarks.some(
+        (bookmark) => String(bookmark._id) === String(movie._id)
+      );
 
+      // Optimistic UI update
+      const updatedBookmarks = isBookmarked
+        ? localBookmarks.filter(
+            (bookmark) => String(bookmark._id) !== String(movie._id)
+          )
+        : [...localBookmarks, { _id: movie._id, ...movie }];
+      setLocalBookmarks(updatedBookmarks);
 
-    try {
-      const result = isBookmarked
-        ? await dispatch(fetchBookmarksRemoveContent(movie._id))
-        : await dispatch(fetchBookmarksAddContent(movie._id));
+      try {
+        // Perform the bookmark toggle action
+        const result = isBookmarked
+          ? await dispatch(fetchBookmarksRemoveContent(movie._id))
+          : await dispatch(fetchBookmarksAddContent(movie._id));
 
-      if (
-        (isBookmarked && fetchBookmarksRemoveContent.fulfilled.match(result)) ||
-        (!isBookmarked && fetchBookmarksAddContent.fulfilled.match(result))
-      ) {
-        // Dispatch action to update user's bookmarks in Redux
-        dispatch(updateUserBookmarks(updatedBookmarks));
-        
-      } else {
-        console.error("Error with bookmark toggle:", result.payload || "Failed to toggle bookmark");
-        // Revert local update if API call fails
-        setLocalBookmarks(isBookmarked
-          ? [...localBookmarks, { id: movie._id, ...movie }]
-          : localBookmarks.filter((bookmark) => bookmark.id !== movie._id));
+        if (result.payload && result.payload.success) {
+          dispatch(updateUserBookmarks(updatedBookmarks));
+        } else {
+          console.error(
+            "Bookmark toggle failed:",
+            result.payload || "Error occurred"
+          );
+          setLocalBookmarks(localBookmarks); // Revert if action fails
+        }
+      } catch (error) {
+        console.error("Error handling bookmark toggle:", error);
+        setLocalBookmarks(localBookmarks); // Revert on error
       }
-    } catch (error) {
-      console.error("Error handling bookmark toggle:", error);
-      setLocalBookmarks(isBookmarked
-        ? [...localBookmarks, { id: movie._id, ...movie }]
-        : localBookmarks.filter((bookmark) => bookmark.id !== movie._id));
-    }
-  };
-  return (
-    <div className="text-white">
-      <h2 className="mb-4 text-2xl font-bold">Recommended for you</h2>
-      <div className="grid md:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-4">
-        {allContent?.movies?.map((item) => (
-          <div key={item._id} className="relative">
-            {/* Bookmark button */}
-            <button
-              onClick={() => handleBookmarkToggle(item)}
-              className="absolute top-9 z-10 right-4 rounded-full bg-gray-500 w-7 h-7 text-center"
-            >
-              <i
-                className={
-                  localBookmarks.some((bookmark) => String(bookmark.id) === String(item._id))
-                    ? "fa-solid fa-bookmark"
-                    : "fa-regular fa-bookmark"
-                }
-                style={{ color: "#fff" }}
-              ></i>
-            </button>
+    },
+    [dispatch, localBookmarks]
+  );
 
-            {/* Link to movie details page */}
-            <Link to={`/watch/${item._id}`} className="group ms-4 ">
-              <div className="rounded-lg overflow-hidden relative">
-                <img
-                  src={item.backdrop_path}
-                  alt=""
-                  className="transition-transform duration-300 ease-in-out group-hover:scale-125 w-full"
-                />
-                <div className="absolute bottom-5 left-4 text-xs">
-                  <span className="me-1">{item.release_date}</span> •
-                  <i
-                    className="fa-solid fa-film fa-sm mt-7 ms-2 me-2"
-                    style={{ color: "#fff" }}
-                  ></i>
-                  <span>{item.contentType}</span>
-                  <p className="text-xl font-bold">{item.title}</p>
+  return (
+   <div>
+      {loading ? (
+        <div className="h-screen">
+        <div className="flex justify-center items-center  h-full">
+          <Loader className="animate-spin text-red-600 size-10" />
+        </div>
+      </div> // Show loading indicator
+      ) : (
+        <div className="text-white">
+        <h2 className="mb-4 text-2xl font-bold">Recommended for you</h2>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        {allContent?.movies?.map((item) => {
+          const isBookmarked = localBookmarks.some(
+            (bookmark) => String(bookmark._id) === String(item._id)
+          );
+
+          return (
+            <div key={item._id} className="relative">
+              {/* Bookmark button */}
+              <button
+                onClick={() => handleBookmarkToggle(item)}
+                className="absolute top-8 right-2 z-10 rounded-full bg-gray-500 w-7 h-7 text-center"
+              >
+                <i
+                  className={`fa-${isBookmarked ? "solid" : "regular"} fa-bookmark`}
+                  style={{ color: "#fff" }}
+                ></i>
+              </button>
+
+              {/* Movie details link */}
+              <Link to={`/watch/${item._id}`} className="group ms-4">
+                <div className="rounded-lg overflow-hidden relative">
+                  <img
+                    src={item.backdrop_path}
+                    alt=""
+                    className="transition-transform duration-300 ease-in-out group-hover:scale-125 w-full"
+                  />
+                  <div className="absolute bottom-5 left-4 text-xs">
+                    <span className="me-1 text-xs">{item.release_date}</span> •
+                    <i
+                      className="fa-solid fa-film fa-sm mt-7 ms-2 me-2"
+                      style={{ color: "#fff" }}
+                    ></i>
+                    <span className="text-xs">{item.contentType}</span>
+                    <p className="text-sm font-semibold">{item.title}</p>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          </div>
-        ))}
+              </Link>
+            </div>
+          );
+        })}
       </div>
-    </div>
+      </div>
+      )}
+      </div>
   );
 }
 

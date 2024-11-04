@@ -3,6 +3,6 @@ import { getTvShows , getTvShowsDetails } from '../controllers/tvshows.controlle
 const router = express.Router()
 
 router.get("/all",getTvShows)
-router.get("/:id/tvshowsdetails",getTvShowsDetails)
+router.get("/:id/details",getTvShowsDetails)
 
 export default router;

@@ -16,6 +16,7 @@ const authSlice = createSlice({
     updateUserBookmarks(state,action){
       if(state.user){
         state.user.bookmarks = action.payload;
+        
       }
      
     }

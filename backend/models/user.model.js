@@ -20,7 +20,7 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
       },
-      id: {
+      _id: {
         type: String,
         required: true,
       },
@@ -31,10 +31,11 @@ const userSchema = mongoose.Schema({
       backdrop_path:{
         type:String
       },
-      release_date:{type:String},
+      releaseDate:{type:String},
       overview:{type:String}
     },
   ],
+
 });
 
 export const User = mongoose.model("User", userSchema);

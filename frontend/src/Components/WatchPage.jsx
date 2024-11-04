@@ -12,6 +12,7 @@ function WatchPage() {
   const [loading, setLoading] = useState(true); // Loading state
   const [content, setContent] = useState({}); // State for content details
   const { contentType } = useSelector((state) => state.content); // Get content type from Redux state
+  console.log(contentType);
   const responsive = {
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
@@ -56,6 +57,7 @@ function WatchPage() {
 
         setContent(res.data); // Set the content in state
       } catch (error) {
+        console.log(error);
         if (error.message.includes("404")) {
           setContent(null); // Set content to null if not found
         }
@@ -66,9 +68,10 @@ function WatchPage() {
 
     getContentDetails(); // Call the function to fetch content details
   }, [contentType, id]); // Run effect when contentType or id changes
-  console.log(content?.content?.movie);
-  const movieDetails = content?.content?.movie;
+
+  const movieDetails = content?.content?.show;
   const similarMovies = content?.content?.similarMovies
+
   return (
     <div className="text-white md:flex  md:flex-row justify-center mt-4 flex-col md:items-start flex items-center">
       <div className="md:w-1/4 w-1/2 md:me-24 ">

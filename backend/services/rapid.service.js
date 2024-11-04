@@ -14,7 +14,7 @@ export const fetchFromRAPID = async (url) => {
 		},
 		// params: {
 		// 	query: query
-		//   },
+		//   }
 	};
   
   
