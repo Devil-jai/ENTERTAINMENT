@@ -113,7 +113,7 @@ function TvPage() {
             );
           })
         ) : (
-          <p>Loading...</p>
+          <p> </p>
         )}
       </div>
     </div>
