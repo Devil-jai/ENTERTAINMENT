@@ -109,7 +109,7 @@ function MoviesPage() {
                     alt=""
                     className="transition-transform duration-300 ease-in-out group-hover:scale-125 w-full"
                   />
-                  <div className="absolute bottom-5 left-4 text-xs">
+                  <div className=" bottom-5 left-4 text-xs">
                     <span className="me-1 text-xs">{item.release_date}</span> •
                     <i
                       className="fa-solid fa-film fa-sm mt-7 ms-2 me-2"

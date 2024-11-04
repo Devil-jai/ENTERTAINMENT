@@ -69,8 +69,10 @@ function WatchPage() {
     getContentDetails(); // Call the function to fetch content details
   }, [contentType, id]); // Run effect when contentType or id changes
 
-  const movieDetails = content?.content?.show;
+const movieDetails = contentType === "movie" ? content?.content?.movie : content?.content?.show
+
   const similarMovies = content?.content?.similarMovies
+ 
 
   return (
     <div className="text-white md:flex  md:flex-row justify-center mt-4 flex-col md:items-start flex items-center">

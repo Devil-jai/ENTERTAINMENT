@@ -73,13 +73,13 @@ function TvPage() {
       ) : (
     <div className="text-white">
       <h2 className="mb-4 text-2xl font-bold">TV Series</h2>
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
         {contentType === "tv" && allContent?.movies?.length > 0 ? (
-          allContent.movies.map((item) => {
+          allContent?.movies?.map((item) => {
             const isBookmarked = localBookmarks.some(
               (bookmark) => String(bookmark._id) === String(item._id)
             );
-
+  
             return (
               <div key={item._id} className="relative">
                 {/* Bookmark button */}
@@ -92,20 +92,23 @@ function TvPage() {
                     style={{ color: "#fff" }}
                   ></i>
                 </button>
-
-                {/* TV show details link */}
-                <Link to={`/watch/${item._id}`} className="min-w-[300px] group ms-4">
+  
+                {/* Movie details link */}
+                <Link to={`/watch/${item._id}`} className="group ms-4">
                   <div className="rounded-lg overflow-hidden relative">
                     <img
                       src={item.backdrop_path}
-                      alt="show image"
-                      className="transition-transform duration-300 ease-in-out group-hover:scale-125"
+                      alt=""
+                      className="transition-transform duration-300 ease-in-out group-hover:scale-125 w-full"
                     />
-                    <div className="absolute bottom-5 left-4 text-xs">
-                      <span className="me-1">{item.first_aired}</span> •
-                      <i className="fa-solid fa-film fa-sm mt-7 ms-2 me-2" style={{ color: "#fff" }}></i>
-                      <span>{item.contentType}</span>
-                      <p className="text-xl font-bold">{item.title}</p>
+                    <div className=" bottom-5 left-4 text-xs">
+                      <span className="me-1 text-xs">{item.first_aired}</span> •
+                      <i
+                        className="fa-solid fa-film fa-sm mt-7 ms-2 me-2"
+                        style={{ color: "#fff" }}
+                      ></i>
+                      <span className="text-xs">{item.contentType}</span>
+                      <p className="text-sm font-semibold">{item.title}</p>
                     </div>
                   </div>
                 </Link>
