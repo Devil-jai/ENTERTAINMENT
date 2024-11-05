@@ -15,15 +15,21 @@ function MoviesPage() {
   const { user } = useSelector((state) => state.auth);
   const { allContent, contentType } = useSelector((state) => state.content);
 
-  // Initialize local bookmarks from user data
-  const [localBookmarks, setLocalBookmarks] = useState(
-    Array.isArray(user?.bookmarks) ? user?.bookmarks : []
-  );
+// Initialize local bookmarks with _id as a number
+const [localBookmarks, setLocalBookmarks] = useState(
+  Array.isArray(user?.bookmarks)
+    ? user?.bookmarks.map((bookmark) => ({ ...bookmark, _id: Number(bookmark._id) }))
+    : []
+);
 
-  // Sync local bookmarks with Redux when user bookmarks change
-  useEffect(() => {
-    setLocalBookmarks(Array.isArray(user?.bookmarks) ? user?.bookmarks : []);
-  }, [user?.bookmarks]);
+// Sync local bookmarks with Redux when user bookmarks change, with type conversion to number
+useEffect(() => {
+  setLocalBookmarks(
+    Array.isArray(user?.bookmarks)
+      ? user?.bookmarks.map((bookmark) => ({ ...bookmark, _id: Number(bookmark._id) }))
+      : []
+  );
+}, [user?.bookmarks]);
 
   // Fetch all content when the contentType is "movie"
   useEffect(() => {
@@ -33,44 +39,61 @@ function MoviesPage() {
     }
   }, [contentType, dispatch]);
 
+
   // Toggle bookmark function
-  const handleBookmarkToggle = useCallback(
-    async (movie) => {
-      const isBookmarked = localBookmarks.some(
-        (bookmark) => String(bookmark._id) === String(movie._id)
-      );
+  const handleBookmarkToggle = async (movie) => {
+    console.log("movie", movie);
+  // Convert _id to number during comparisons
+const isBookmarked = localBookmarks.some(
+  (bookmark) => Number(bookmark._id) === Number(movie._id)
+);
 
-      // Optimistic UI update
-      const updatedBookmarks = isBookmarked
-        ? localBookmarks.filter(
-            (bookmark) => String(bookmark._id) !== String(movie._id)
-          )
-        : [...localBookmarks, { _id: movie._id, ...movie }];
-      setLocalBookmarks(updatedBookmarks);
-
-      try {
-        // Perform the bookmark toggle action
-        const result = isBookmarked
-          ? await dispatch(fetchBookmarksRemoveContent(movie._id))
-          : await dispatch(fetchBookmarksAddContent(movie._id));
-
-        if (result.payload && result.payload.success) {
-          dispatch(updateUserBookmarks(updatedBookmarks));
+// Ensure that the movie being added or updated has _id as a number
+const updatedBookmarks = isBookmarked
+  ? localBookmarks.filter((bookmark) => Number(bookmark._id) !== Number(movie._id))
+  : [...localBookmarks, { _id: Number(movie._id), ...movie }];
+    setLocalBookmarks(updatedBookmarks); // Immediate UI update
+  
+    try {
+      // Execute API call based on bookmark status
+      const result = isBookmarked
+        ? await dispatch(fetchBookmarksRemoveContent(movie._id))
+        : await dispatch(fetchBookmarksAddContent(movie._id));
+  
+      // Check for success in both add and remove cases
+      if (result.payload && result.payload.success) {
+        if (!isBookmarked) {
+          // For add, update local state with new bookmark
+          const newBookmark = {
+            ...result.payload.content,
+            release_date: result.payload.content.releaseDate,
+          };
+          const finalUpdatedBookmarks = [...localBookmarks, newBookmark];
+          setLocalBookmarks(finalUpdatedBookmarks);
+          dispatch(updateUserBookmarks(finalUpdatedBookmarks)); // Sync Redux state
         } else {
-          console.error(
-            "Bookmark toggle failed:",
-            result.payload || "Error occurred"
+          // For remove, remove bookmark from local state
+          const finalUpdatedBookmarks = localBookmarks.filter(
+            (bookmark) => bookmark._id !== movie._id
           );
-          setLocalBookmarks(localBookmarks); // Revert if action fails
+          setLocalBookmarks(finalUpdatedBookmarks);
+          dispatch(updateUserBookmarks(finalUpdatedBookmarks)); // Sync Redux state
         }
-      } catch (error) {
-        console.error("Error handling bookmark toggle:", error);
-        setLocalBookmarks(localBookmarks); // Revert on error
+      } else {
+        // Rollback if API call fails
+        console.error(
+          "Error with bookmark toggle:",
+          result.payload || "Failed to toggle bookmark"
+        );
+        setLocalBookmarks(localBookmarks); // Revert local state on failure
       }
-    },
-    [dispatch, localBookmarks]
-  );
-
+    } catch (error) {
+      console.error("Error handling bookmark toggle:", error);
+      setLocalBookmarks(localBookmarks); // Rollback on error
+    }
+  };
+  
+console.log(localBookmarks);
   return (
    <div>
       {loading ? (

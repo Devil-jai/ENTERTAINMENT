@@ -40,7 +40,7 @@ function HomePage() {
 
   const handleInputChange = (e) => setSearchQuery(e.target.value);
 
-  console.log(searchResults);
+  
 
   
   const renderContent = () => {
