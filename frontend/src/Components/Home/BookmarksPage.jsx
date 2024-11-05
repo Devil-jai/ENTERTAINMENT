@@ -80,13 +80,13 @@ console.log("moviebook",MovieBookmar);
                 className="transition-transform duration-300 ease-in-out group-hover:scale-125 w-full"
               />
               <div className="bottom-5 left-4 text-xs">
-                <span className="me-1">{item.releaseDate}</span> •
+                <span className=" text-[9px] sm:text-xs sm:me-2 me-1">{item.releaseDate}</span>•
                 <i
-                  className="fa-solid fa-film fa-sm mt-7 ms-2 me-2"
+                  className="fa-solid fa-film fa-sm mt-7 sm:mx-2 mx-1"
                   style={{ color: "#fff" }}
                 ></i>
-                <span>{item.type}</span>
-                <p className="text-xl font-bold">{item.title}</p>
+                <span className="text-[9px] sm:text-xs">{item.type}</span>
+                <p className="text-xs sm:text-sm font-semibold mt-1">{item.title}</p>
               </div>
             </div>
       
@@ -125,13 +125,13 @@ console.log("moviebook",MovieBookmar);
                 className="transition-transform duration-300 ease-in-out group-hover:scale-125 w-full"
               />
               <div className="bottom-5 left-4 text-xs">
-                <span className="me-1">{item.releaseDate}</span> •
+                <span className=" text-[9px] sm:text-xs sm:me-2 me-1">{item.releaseDate}</span>•
                 <i
-                  className="fa-solid fa-film fa-sm mt-7 ms-2 me-2"
+                  className="fa-solid fa-film fa-sm mt-7 sm:mx-2 mx-1"
                   style={{ color: "#fff" }}
                 ></i>
-                <span>{item.type}</span>
-                <p className="text-xl font-bold">{item.title}</p>
+                <span className="text-[9px] sm:text-xs">{item.type}</span>
+                <p className="text-xs sm:text-sm font-semibold mt-1">{item.title}</p>
               </div>
             </div>
       

@@ -93,10 +93,10 @@ function MoviesPage() {
               {/* Bookmark button */}
               <button
                 onClick={() => handleBookmarkToggle(item)}
-                className="absolute top-8 right-2 z-10 rounded-full bg-gray-500 w-7 h-7 text-center"
+                className="absolute top-8 right-2 z-10 rounded-full bg-gray-500 sm:w-7 sm:h-7 w-6 h-6 flex justify-center items-center"
               >
                 <i
-                  className={`fa-${isBookmarked ? "solid" : "regular"} fa-bookmark`}
+                  className={`fa-${isBookmarked ? "solid" : "regular"} fa-bookmark  fa-xs`}
                   style={{ color: "#fff" }}
                 ></i>
               </button>
@@ -110,13 +110,12 @@ function MoviesPage() {
                     className="transition-transform duration-300 ease-in-out group-hover:scale-125 w-full"
                   />
                   <div className=" bottom-5 left-4 text-xs">
-                    <span className="me-1 text-xs">{item.release_date}</span> •
-                    <i
-                      className="fa-solid fa-film fa-sm mt-7 ms-2 me-2"
-                      style={{ color: "#fff" }}
+                    <span className="me-1 text-[9px] sm:text-xs sm:me-2">{item.release_date}</span>•<i
+                      className="fa-solid fa-film fa-sm mt-7 sm:mx-2 mx-1"
+                      style={{ color: "#fff"}}
                     ></i>
-                    <span className="text-xs">{item.contentType}</span>
-                    <p className="text-sm font-semibold">{item.title}</p>
+                    <span className="text-[9px] sm:text-xs">{item.contentType}</span>
+                    <p className="text-xs sm:text-sm font-semibold mt-1">{item.title}</p>
                   </div>
                 </div>
               </Link>

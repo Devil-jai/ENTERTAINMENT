@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../features/auth/authActions";
+
 import Navbar from "../Navbar";
 import { fetchallContent, searchContent } from "../../hooks/useGetAllContent";
 import TrendingNowSlider from "./TrendingNowSlider";
@@ -40,26 +40,29 @@ function HomePage() {
 
   const handleInputChange = (e) => setSearchQuery(e.target.value);
 
-  // Render search results or content based on conditions
+  console.log(searchResults);
+
+  
   const renderContent = () => {
     if (searchResults.length > 0) {
       return (
         <div>
           <h2 className="text-xl text-white my-5">Search Results</h2>
-          <div className="grid grid-cols-4 gap-4 text-white">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 text-white">
             {searchResults.map((item) => (
-              <Link to={`/watch/${item._id}`} className="group ms-4" key={item._id}>
+              <Link to={`/watch/${item._id}`} className="group ms-1" key={item._id}>
                 <div className="rounded-lg overflow-hidden relative">
                   <img
                     src={item.backdrop_path}
                     alt=""
                     className="transition-transform duration-300 ease-in-out group-hover:scale-125 w-full"
                   />
-                  <div className="absolute bottom-5 left-4 text-xs">
-                    <span className="me-1">{item.release_date}</span> •
-                    <i className="fa-solid fa-film fa-sm mt-7 ms-2 me-2" style={{ color: "#fff" }}></i>
-                    <span>{item.contentType}</span>
-                    <p className="text-xl font-bold">{item.title}</p>
+                  <div className="text-xs">
+                    <span className=" text-[9px] sm:text-xs ">{item.release_date}</span>
+                    <span className=" text-[9px] sm:text-xs sm:me-2 me-1">{item.first_aired}</span>•
+                    <i className="fa-solid fa-film fa-sm mt-7 sm:mx-2 mx-1" style={{ color: "#fff" }}></i>
+                    <span className="text-[9px] sm:text-xs">{item.contentType}</span>
+                    <p className="text-xs sm:text-sm font-semibold mt-1">{item.title}</p>
                   </div>
                 </div>
               </Link>
@@ -88,7 +91,7 @@ function HomePage() {
   return (
     <div className="flex lg:p-5 justify-around">
       <Navbar />
-      <div className="w-svw ms-5 pt-12 lg:pl-20 lg:pt-0">
+      <div className="w-svw px-5 pt-12 lg:pl-20 lg:pt-0">
         <div className="bg-[#10141E] relative flex items-center w-full h-12 rounded-lg focus-within:shadow-lg overflow-hidden">
           <div className="grid place-items-center h-full w-12 text-gray-300 bg-[#10141E]">
             <i className="fa-solid fa-magnifying-glass"></i>
