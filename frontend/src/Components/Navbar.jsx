@@ -15,10 +15,6 @@ function Navbar() {
     dispatch(setContentType(type));
   };
 
-  const handleLogout = () => {
-    dispatch(logout());
-  };
-
   return (
     <aside className="lg:w-20 bg-indigo flex flex-col items-center my-4 lg:rounded-2xl lg:h-[650px] lg:fixed lg:left-0 lg:top-0 lg:flex lg:flex-col lg:justify-between lg:items-center lg:py-4 z-20">
       {/* Top Navbar for Small & Medium Screens */}
@@ -98,9 +94,7 @@ function Navbar() {
               alt="user"
               className="border-white border rounded-full"
             />
-             <div>
-        <button onClick={handleLogout}>logout</button>
-      </div>
+            
         </div>
       </div>
     
