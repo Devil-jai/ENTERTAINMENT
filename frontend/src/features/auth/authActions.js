@@ -7,8 +7,11 @@ import { api } from '../../utils/constants';
 export const signup = createAsyncThunk('auth/signup', async (credentials, { rejectWithValue }) => {
     try {
         const response = await axios.post(`${api}/api/v1/auth/signup`, credentials, { withCredentials: true });
-        console.log(response);
+       
         toast.success("Account created successfully");
+        if (response.data.token) {
+            localStorage.setItem('authToken', response.data.token); // Save token to localStorage
+        }
         return response.data.user;
     } catch (error) {
         console.log(error);

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setContentType } from "../features/auth/contentSlice"; // Adjust the path
 import user from "../images/user.png";
-import { logout } from "../features/auth/authActions";
+
 
 
 
@@ -45,7 +45,7 @@ function Navbar() {
           ></i>
         </Link>
        </div>
-        <img onClick={handleLogout}
+        <img 
           width={30}
           style={{ height: "30px" }}
           src={user}
