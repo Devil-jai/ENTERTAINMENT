@@ -98,9 +98,12 @@ function Navbar() {
               alt="user"
               className="border-white border rounded-full"
             />
-           
+             <div>
+        <button onClick={handleLogout}>logout</button>
+      </div>
         </div>
       </div>
+    
     </aside>
   );
 }
