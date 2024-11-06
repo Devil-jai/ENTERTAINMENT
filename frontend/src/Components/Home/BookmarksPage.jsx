@@ -108,9 +108,9 @@ console.log("moviebook",MovieBookmar);
           >
             <i
               className={
-                localBookmarks.some((bookmark) => bookmark._id === item._id) 
-                  ? "fa-solid fa-bookmark" 
-                  : "fa-regular fa-bookmark"
+              
+                   "fa-solid fa-bookmark" 
+                  
               }
               style={{ color: "#fff" }}
             ></i>
