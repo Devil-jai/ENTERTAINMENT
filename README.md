@@ -45,7 +45,7 @@ The Entertainment App serves as a capstone project, integrating Full Stack Web D
 
 - **Frontend**: HTML, CSS, Tailwind CSS, React, Redux-Toolkit  
 - **Backend**: Node.js, Express.js, MongoDB  
-- **API Integration**: TMDB API  
+- **API Integration**: RAPID API  
 
 ---
 
